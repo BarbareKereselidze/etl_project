@@ -37,7 +37,7 @@ class ProcessCSV:
 
         return column_count
 
-    def get_column_size(self) -> list:
+    def get_column_sizes(self) -> list:
         column_size_in_bytes = self.df.memory_usage(deep=True)
         column_size_in_mb = column_size_in_bytes / (1024 ** 2)
 
@@ -50,6 +50,12 @@ class ProcessCSV:
         ]
 
         return column_size_list
+
+    def get_one_column_size(self):
+        df_size_in_bytes = self.df.memory_usage(deep=True).iloc[1]
+        one_df_size_in_mb = df_size_in_bytes / (1024 ** 2)
+
+        return one_df_size_in_mb.__round__(3)
 
     def get_df_size(self) -> float:
         df_size_in_bytes = self.df.memory_usage(deep=True).sum()
@@ -78,7 +84,8 @@ class ProcessAndStoreData:
                 'df_of_csv_rows_n': processor.get_row_amount(),
                 'df_of_csv_columns_n': processor.get_column_amount(),
                 'df_size_in_mb': processor.get_df_size(),
-                'df_of_column_size_in_mb': processor.get_column_size()
+                'df_of_column_size_in_mb': processor.get_one_column_size(),
+                'df_of_all_column_size_in_mb': processor.get_column_sizes()
             }
 
             self.all_csv_data.append(csv_data)
