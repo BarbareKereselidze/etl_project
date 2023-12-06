@@ -2,6 +2,7 @@ from fake_csv_data_generator import GenerateFakeCsv
 from csv_to_json import ProcessAndStoreData
 from upload_data_to_mysql import ConnectToMySql, CreateDatabaseAndTable, UploadData
 from config_reader import ReadConfigFile
+from upload_data_to_cloud import UploadDataToBigQuery
 
 
 def main():
@@ -36,8 +37,16 @@ def main():
 
     ConnectToMySql(config_file_path).commit_and_close_connection()
 
+    # upload data to cloud
+    upload_to_cloud = UploadDataToBigQuery(config_file_path)
+    upload_to_cloud.upload_data()
+
 
 if __name__ == "__main__":
     main()
+
+
+
+
 
 

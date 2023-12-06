@@ -2,6 +2,7 @@ import os
 import mysql.connector
 import json
 from datetime import datetime
+import pandas as pd
 from config_reader import ReadConfigFile
 
 
@@ -21,12 +22,13 @@ class ConnectToMySql:
         self.cursor = self.create_cursor()
 
     def connect_to_my_sql(self):
-        return mysql.connector.connect(
+        conn = mysql.connector.connect(
             host=self.mysql_host,
             user=self.mysql_user,
             password=self.mysql_password,
             charset=self.mysql_charset
         )
+        return conn
 
     def create_cursor(self):
         return self.conn.cursor()
@@ -96,6 +98,19 @@ class UploadData:
                 data = json.load(file)
                 self.clean_data(data)
 
+    def clean_data(self, data):
+        for entry in data:
+            filename, entry_data = entry.popitem()
+            select_query = f"SELECT * FROM {self.table_name} WHERE csv_filename = %s"
+            self.cursor.execute(select_query, (filename,))
+            existing_data = self.cursor.fetchone()
+
+            if existing_data:
+                update_query = f"UPDATE {self.table_name} SET modified_at = %s WHERE csv_filename = %s"
+                self.cursor.execute(update_query, (datetime.now(), filename))
+            else:
+                self.insert_data(filename, entry_data)
+
     def insert_data(self, filename, entry_data):
         insert_query = f"""
         INSERT INTO {self.table_name}
@@ -113,18 +128,51 @@ class UploadData:
         )
         self.cursor.execute(insert_query, values)
 
-    def clean_data(self, data):
-        for entry in data:
-            filename, entry_data = entry.popitem()
-            select_query = f"SELECT * FROM {self.table_name} WHERE csv_filename = %s"
-            self.cursor.execute(select_query, (filename,))
-            existing_data = self.cursor.fetchone()
 
-            if existing_data:
-                update_query = f"UPDATE {self.table_name} SET modified_at = %s WHERE csv_filename = %s"
-                self.cursor.execute(update_query, (datetime.now(), filename))
-            else:
-                self.insert_data(filename, entry_data)
+class GetMysqlData:
+
+    def __init__(self, config_file_path):
+        connection = ConnectToMySql(config_file_path)
+
+        self.database_name = connection.database_name
+        self.table_name = connection.table_name
+
+        self.conn = connection.conn
+        self.cursor = connection.cursor
+
+    def select_all_data(self):
+        try:
+            self.cursor.execute(f"USE {self.database_name}")
+            select_query = f"SELECT * FROM {self.table_name}"
+            self.cursor.execute(select_query)
+
+            # Fetch all records and get column names
+            records = self.cursor.fetchall()
+            column_names = [desc[0] for desc in self.cursor.description]
+
+            # Create a Pandas DataFrame
+            df = pd.DataFrame(records, columns=column_names)
+            return df
+
+        except Exception as e:
+            print(f"Error: {e}")
+            return None
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
