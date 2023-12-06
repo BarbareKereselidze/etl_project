@@ -1,14 +1,14 @@
 from fake_csv_data_generator import GenerateFakeCsv
 from csv_to_json import ProcessAndStoreData
 from upload_data_to_mysql import ConnectToMySql, CreateDatabaseAndTable, UploadData
-from config_reader import ReadConfigFile
+from etl_project.config.config_reader import ReadConfigFile
 from upload_data_to_cloud import UploadDataToBigQuery
 
 
 def main():
 
     # getting file paths from a config file
-    config_file_path = 'config.ini'
+    config_file_path = 'config/config.ini'
     conf_reader = ReadConfigFile(config_file_path)
 
     csv_path = conf_reader.get_csv_path()

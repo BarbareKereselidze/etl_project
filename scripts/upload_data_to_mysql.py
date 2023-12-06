@@ -3,7 +3,7 @@ import mysql.connector
 import json
 from datetime import datetime
 import pandas as pd
-from config_reader import ReadConfigFile
+from etl_project.config.config_reader import ReadConfigFile
 
 
 class ConnectToMySql:

@@ -1,7 +1,7 @@
 import os
 from google.cloud import bigquery
 
-from config_reader import ReadConfigFile
+from etl_project.config.config_reader import ReadConfigFile
 from upload_data_to_mysql import GetMysqlData
 
 
