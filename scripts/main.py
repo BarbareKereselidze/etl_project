@@ -1,4 +1,4 @@
-from fake_csv_data_generator import GenerateFakeCsv
+from fake_csv_data_generator import GenerateCsv
 from csv_to_json import ProcessAndStoreData
 from upload_data_to_mysql import ConnectToMySql, CreateDatabaseAndTable, UploadData
 from etl_project.config.config_reader import ReadConfigFile
@@ -15,8 +15,8 @@ def main():
     json_path = conf_reader.get_json_path()
 
     # generating fake csv data
-    generator = GenerateFakeCsv()
-    generator.generate_csv(csv_path)
+    generator = GenerateCsv(csv_path)
+    generator.generate_csv()
 
     # storing csv data into jsons
     process_data = ProcessAndStoreData(csv_path, json_path)
