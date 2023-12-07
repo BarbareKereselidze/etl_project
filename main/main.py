@@ -1,7 +1,7 @@
 from etl_project.config.config_reader import ReadConfigFile
 
 from etl_project.generate_fake_data.csv_generator import GenerateCsv
-from etl_project.refactor_data.csv_to_json import ProcessAndStoreData
+from etl_project.refactor_data.process_and_store_csv_data import ProcessAndStoreData
 
 from etl_project.mysql_data_upload.connect_to_mysql import ConnectToMySql
 from etl_project.mysql_data_upload.create_mysql_database_and_table import CreateDatabaseAndTable
