@@ -123,8 +123,6 @@ class ProcessAndStoreData:
                 with open(filename, 'w') as json_file:
                     json.dump(self.turn_data_into_dict(), json_file, indent=4)
 
-                    self.logger.info(f"JSON file created as: {filename}")
-
                 break
 
             # create the directory where JSONs are kept if it doesn't exist

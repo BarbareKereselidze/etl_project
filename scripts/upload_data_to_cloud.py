@@ -1,9 +1,9 @@
 import os
 from google.cloud import bigquery
 
-from etl_project.config.config_reader import ReadConfigFile
-from etl_project.logger.logger import get_logger
+from logger import get_logger
 from get_mysql_data import GetMysqlData
+from etl_project.config.config_reader import ReadConfigFile
 
 
 class UploadDataToBigQuery:

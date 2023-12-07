@@ -90,8 +90,6 @@ class GenerateCsv:
                     csv_writer = csv.writer(csvfile)
                     csv_writer.writerows(fake_data)
 
-                    self.logger.info(f"fake data csv file created as: {filename}")
-
                 break
 
             except FileNotFoundError:

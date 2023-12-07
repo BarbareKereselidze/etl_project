@@ -1,6 +1,6 @@
 import mysql.connector
 
-from etl_project.logger.logger import get_logger
+from logger import get_logger
 from etl_project.config.config_reader import ReadConfigFile
 
 
@@ -57,3 +57,4 @@ class ConnectToMySql:
         finally:
             self.cursor.close()
             self.conn.close()
+
