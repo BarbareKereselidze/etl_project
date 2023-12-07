@@ -1,6 +1,6 @@
 import pandas as pd
 
-from connect_to_mysql import ConnectToMySql
+from etl_project.mysql_data_upload.connect_to_mysql import ConnectToMySql
 
 
 class GetMysqlData(ConnectToMySql):
@@ -25,4 +25,5 @@ class GetMysqlData(ConnectToMySql):
 
             # returning an empty dataframe in case of an error
             return pd.DataFrame()
+
 

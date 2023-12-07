@@ -2,7 +2,7 @@ import os
 from google.cloud import bigquery
 
 from etl_project.logging.logger import get_logger
-from get_mysql_data import GetMysqlData
+from etl_project.bigquery_data_upload.get_mysql_data import GetMysqlData
 from etl_project.config.config_reader import ReadConfigFile
 
 
@@ -48,6 +48,8 @@ class UploadDataToBigQuery:
 
 
 
+config_file_path = '/home/user/PycharmProjects/csv_project/etl_project/config/config.ini'
+UploadDataToBigQuery(config_file_path).upload_data()
 
 
 
