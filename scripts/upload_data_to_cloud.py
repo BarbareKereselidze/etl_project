@@ -1,7 +1,7 @@
 import os
 from google.cloud import bigquery
 
-from logger import get_logger
+from etl_project.logging.logger import get_logger
 from get_mysql_data import GetMysqlData
 from etl_project.config.config_reader import ReadConfigFile
 

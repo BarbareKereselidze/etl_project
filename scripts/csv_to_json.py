@@ -3,7 +3,7 @@ import pandas as pd
 import json
 from datetime import datetime
 
-from logger import get_logger
+from etl_project.logging.logger import get_logger
 
 
 class GetCsvFiles:

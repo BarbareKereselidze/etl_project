@@ -4,7 +4,7 @@ from faker import Faker
 from random import randint
 from datetime import datetime
 
-from logger import get_logger
+from etl_project.logging.logger import get_logger
 
 
 class GenerateFakeData:
