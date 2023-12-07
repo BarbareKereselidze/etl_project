@@ -1,6 +1,7 @@
 from fake_csv_data_generator import GenerateCsv
 from csv_to_json import ProcessAndStoreData
-from upload_data_to_mysql import ConnectToMySql, CreateDatabaseAndTable, UploadData
+from create_mysql_database_and_table import CreateDatabaseAndTable
+from upload_data_to_mysql import ConnectToMySql, UploadData
 from etl_project.config.config_reader import ReadConfigFile
 from upload_data_to_cloud import UploadDataToBigQuery
 
