@@ -2,7 +2,7 @@ import os
 import json
 from datetime import datetime
 
-from connect_to_mysql import ConnectToMySql
+from etl_project.mysql_data_upload.connect_to_mysql import ConnectToMySql
 
 
 class UploadData:
