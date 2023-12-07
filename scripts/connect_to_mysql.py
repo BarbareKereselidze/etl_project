@@ -1,6 +1,6 @@
 import mysql.connector
 
-from logger import get_logger
+from etl_project.logger.logger import get_logger
 from etl_project.config.config_reader import ReadConfigFile
 
 
@@ -50,8 +50,6 @@ class ConnectToMySql:
         try:
             self.conn.commit()
 
-            # logging successful commit
-            self.logger.info("committed changes to MYSQL")
         except Exception as error:
             self.conn.rollback()
 

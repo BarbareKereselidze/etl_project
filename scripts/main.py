@@ -8,7 +8,7 @@ from upload_data_to_cloud import UploadDataToBigQuery
 def main():
 
     # getting file paths from a config file
-    config_file_path = 'config/config.ini'
+    config_file_path = '/home/user/PycharmProjects/csv_project/etl_project/config/config.ini'
     conf_reader = ReadConfigFile(config_file_path)
 
     csv_path = conf_reader.get_csv_path()
