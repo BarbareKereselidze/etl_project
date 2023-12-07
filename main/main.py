@@ -1,11 +1,13 @@
 from etl_project.config.config_reader import ReadConfigFile
 
-from fake_csv_data_generator import GenerateCsv
-from csv_to_json import ProcessAndStoreData
+from etl_project.generate_fake_data.fake_csv_data_generator import GenerateCsv
+from etl_project.refactor_data.csv_to_json import ProcessAndStoreData
 
 from etl_project.mysql_data_upload.connect_to_mysql import ConnectToMySql
 from etl_project.mysql_data_upload.create_mysql_database_and_table import CreateDatabaseAndTable
 from etl_project.mysql_data_upload.upload_data_to_mysql import UploadData
+
+from etl_project.bigquery_data_upload.upload_data_to_cloud import UploadDataToBigQuery
 
 
 def main():
@@ -40,9 +42,9 @@ def main():
 
     ConnectToMySql(config_file_path).commit_and_close_connection()
 
-    # # upload data to cloud
-    # upload_to_cloud = UploadDataToBigQuery(config_file_path)
-    # upload_to_cloud.upload_data()
+    # upload data to cloud
+    upload_to_cloud = UploadDataToBigQuery(config_file_path)
+    upload_to_cloud.upload_data()
 
 
 if __name__ == "__main__":
