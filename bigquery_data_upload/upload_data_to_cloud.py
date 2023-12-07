@@ -48,8 +48,4 @@ class UploadDataToBigQuery:
 
 
 
-config_file_path = '/home/user/PycharmProjects/csv_project/etl_project/config/config.ini'
-UploadDataToBigQuery(config_file_path).upload_data()
-
-
 
