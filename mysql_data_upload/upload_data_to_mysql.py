@@ -1,4 +1,3 @@
-import os
 import json
 from datetime import datetime
 
@@ -6,7 +5,7 @@ from etl_project.mysql_data_upload.connect_to_mysql import ConnectToMySql
 
 
 class UploadData:
-    def __init__(self, config_file_path: str, json_file_path: str):
+    def __init__(self, config_file_path: str):
         connection = ConnectToMySql(config_file_path)
 
         self.database_name: str = connection.database_name
@@ -15,26 +14,18 @@ class UploadData:
         self.conn: str = connection.conn
         self.cursor: str = connection.cursor
 
-        self.json_file_path = json_file_path
-
-    def get_json_files(self) -> list:
-        """ retrieves a list of JSON files in the specified directory """
-
-        return [json_file for json_file in os.listdir(self.json_file_path) if json_file.endswith('.json')]
-
-    def get_each_json_file(self) -> None:
+    def get_json_file(self, json_file: str) -> None:
         """ processes each JSON file in the directory, cleaning and uploading the data to the MySQL table."""
 
         self.cursor.execute(f"USE {self.database_name}")
 
-        for json_file in self.get_json_files():
+        with open(json_file, 'r') as json_file:
+            data = json.load(json_file)
 
-            with open(os.path.join(self.json_file_path, json_file), 'r') as file:
-                data = json.load(file)
-                self.clean_data(data)
+            self.clean_data(data)
 
-    def clean_data(self, data: dict) -> None:
-        """ cleans and processes the data from each JSON file
+    def clean_data(self, data: str) -> None:
+        """ cleans and processes the data from latest JSON file
         updates existing records or inserts new records into the MySQL table
         """
 

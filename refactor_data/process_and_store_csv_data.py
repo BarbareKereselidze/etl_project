@@ -43,7 +43,7 @@ class ProcessAndStoreData:
 
         return self.all_csv_data
 
-    def keep_data_in_json(self) -> None:
+    def keep_data_in_json(self) -> str:
         """ store summary data in a JSON file """
 
         current_timestamp = datetime.now().timestamp()
@@ -56,7 +56,7 @@ class ProcessAndStoreData:
                 with open(filename, 'w') as json_file:
                     json.dump(self.turn_data_into_dict(), json_file, indent=4)
 
-                break
+                return filename
 
             # create the directory where JSONs are kept if it doesn't exist
             except FileNotFoundError:

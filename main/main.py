@@ -25,7 +25,7 @@ def main():
 
     # storing csv data into jsons
     process_data = ProcessAndStoreData(csv_path, json_path)
-    process_data.keep_data_in_json()
+    new_json_path = process_data.keep_data_in_json()
 
     # uploading json data into mysql
     create_db_instance = CreateDatabaseAndTable(config_file_path)
@@ -36,8 +36,8 @@ def main():
     create_table_instance.create_table()
     create_table_instance.conn.commit()
 
-    upload_data_instance = UploadData(config_file_path, json_path)
-    upload_data_instance.get_each_json_file()
+    upload_data_instance = UploadData(config_file_path)
+    upload_data_instance.get_json_file(new_json_path)
     upload_data_instance.conn.commit()
 
     ConnectToMySql(config_file_path).commit_and_close_connection()
