@@ -1,7 +1,7 @@
 import mysql.connector
 
 from etl_project.logging.logger import get_logger
-from etl_project.config.config_reader import ReadConfigFile
+from etl_project.config.config_reader import get_config_value
 
 
 class ConnectToMySql:
@@ -10,18 +10,17 @@ class ConnectToMySql:
     """
 
     def __init__(self, config_file_path: str):
-        config_reader = ReadConfigFile(config_file_path)
 
         # getting logger instance for logging
         self.logger = get_logger()
 
-        self.mysql_host: str = config_reader.get_mysql_host()
-        self.mysql_user: str = config_reader.get_mysql_user()
-        self.mysql_password: str = config_reader.get_mysql_password()
-        self.mysql_charset: str = config_reader.get_mysql_charset()
+        self.mysql_host: str = get_config_value(config_file_path, "MySql", "host")
+        self.mysql_user: str = get_config_value(config_file_path, "MySql", "user")
+        self.mysql_password: str = get_config_value(config_file_path, "MySql", "password")
+        self.mysql_charset: str = get_config_value(config_file_path, "MySql", "charset")
 
-        self.database_name: str = config_reader.get_mysql_database_name()
-        self.table_name: str = config_reader.get_mysql_table_name()
+        self.database_name: str = get_config_value(config_file_path, "Database", "mysql_database_name")
+        self.table_name: str = get_config_value(config_file_path, "Database", "mysql_table_name")
 
         self.conn = self.connect_to_my_sql()
         self.cursor = self.create_cursor()

@@ -1,4 +1,4 @@
-from etl_project.config.config_reader import ReadConfigFile
+from etl_project.config.config_reader import get_config_value
 
 from etl_project.generate_fake_data.csv_generator import GenerateCsv
 from etl_project.refactor_data.process_and_store_csv_data import ProcessAndStoreData
@@ -14,10 +14,9 @@ def main():
 
     # getting file paths from a config file
     config_file_path = '/home/user/PycharmProjects/csv_project/etl_project/config/config.ini'
-    conf_reader = ReadConfigFile(config_file_path)
 
-    csv_path = conf_reader.get_csv_path()
-    json_path = conf_reader.get_json_path()
+    csv_path = get_config_value(config_file_path, "Paths", "csv_path")
+    json_path = get_config_value(config_file_path, "Paths", "json_path")
 
     # generating fake csv data
     generator = GenerateCsv(csv_path)

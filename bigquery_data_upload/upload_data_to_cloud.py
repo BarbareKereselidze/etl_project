@@ -3,17 +3,16 @@ from google.cloud import bigquery
 
 from etl_project.logging.logger import get_logger
 from etl_project.bigquery_data_upload.get_mysql_data import GetMysqlData
-from etl_project.config.config_reader import ReadConfigFile
+from etl_project.config.config_reader import get_config_value
 
 
 class UploadDataToBigQuery:
     def __init__(self, config_file_path: str):
-        config_reader = ReadConfigFile(config_file_path)
-        self.google_credentials: str = config_reader.get_google_credentials()
+        self.google_credentials: str = get_config_value(config_file_path, "Paths", "google_application_credentials_path")
 
-        self.project_id: str = config_reader.get_bigquery_project_id()
-        self.dataset_id: str = config_reader.get_bigquery_dataset_id()
-        self.table_id: str = config_reader.get_bigquery_table_id()
+        self.project_id: str = get_config_value(config_file_path, "BigQuery", "project_id")
+        self.dataset_id: str = get_config_value(config_file_path, "BigQuery", "dataset_id")
+        self.table_id: str = get_config_value(config_file_path, "BigQuery", "table_id")
 
         # getting logger instance for logging
         self.logger = get_logger()
