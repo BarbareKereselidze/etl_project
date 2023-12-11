@@ -1,6 +1,6 @@
 # ETL Project README
 This Python ETL project is designed to automate the process of generating fake CSV data, processing and refactoring the data, 
-and uploading it to MySQL database which is used as an engine to upload data to Google BigQuery. 
+and uploading it to Google BigQuery. 
 The project is organized into several directories, each serving a specific purpose.
 
 
@@ -13,12 +13,12 @@ The project is organized into several directories, each serving a specific purpo
 ## Project Structure:
 1. **Config**
    * **config.ini** <br>
-     This configuration file is located in the config directory and contains sections for Paths, MySQL, Database, and BigQuery configurations.
+     This configuration file is located in the config directory and contains sections for File paths and BigQuery configurations.
    * **config_reader.py**: <br>
-     The ReadConfigFile class in this module provides functions to read values from the config.ini file, ensuring that sensitive information is not hard-coded into the code.
+     The get_config_value function returns the value from the config.ini file.
 2. **Logging**
    * **logger.py** <br>
-     The get_logger function returns a configured logger using the Python logging library. Proper logging is essential for tracking the execution flow and diagnosing potential issues.
+     The get_logger function returns a configured logger using the Python logging library. 
 3. **Generate Fake Data**
    * **fake_csv_data_generator.py** <br>
      This module, located in the generate_fake_data directory, utilizes the Faker library to create fake user and job data.
@@ -39,22 +39,15 @@ The project is organized into several directories, each serving a specific purpo
    * **csv_files**
    * **json_files**
    * The data directory is where generated CSV and JSON files are stored. If the csv_files and json_files directories do not exist, the code will generate them and log the directory creation.
-7. **MySql Data Upload**
-   * **connect_to_mysql.py** <br>
-     Establishes a connection to MySQL using configuration information.
-    * **create_mysql_database_and_table.py**  <br>
-     Creates a MySQL database and table if they don't already exist.
-    * **upload_data_to_mysql.py** <br>
-     Uploads data to MySQL, preventing duplicates.
-8. **BigQuery Data Upload**
-   * **get_mysql_data.py** <br>
-     Retrieves data from MySQL.
+6. **BigQuery Data Upload**
+   * **table_schema.py** <br>
+     Holds the table schema for BigQuery.
    * **upload_data_to_cloud.py** <br>
      Uploads data to Google BigQuery.
-9. **Main**
+7. **Main**
    * **main.py** <br>
    * The main script running the entire ETL process. It runs all the classes in a sequence, ensuring that data is generated, processed, and uploaded systematically.
-10. **Requirements**
+8. **Requirements**
     * **requirements.txt**  <br>
          Lists project dependencies generated from pipreqs. Ensure these dependencies are installed using:
         ```
