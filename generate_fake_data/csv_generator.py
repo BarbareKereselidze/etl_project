@@ -2,21 +2,23 @@ import os
 import csv
 from datetime import datetime
 
+from etl_project.config.config_reader import get_config_value
 from etl_project.generate_fake_data.fake_data_generator import GenerateFakeData
+
 from etl_project.logging.logger import get_logger
 
 
 class GenerateCsv:
     """ class to generate csv files from fake user and fake job data """
 
-    def __init__(self, csv_directory_path: str):
+    def __init__(self, config_file_path: str):
         fake_data_generator = GenerateFakeData()
 
         self.fake_user_data = fake_data_generator.generate_fake_user()
         self.fake_job_data = fake_data_generator.generate_fake_job()
 
         # path of where to store the files
-        self.csv_path = csv_directory_path
+        self.csv_path = get_config_value(config_file_path, "Paths", "csv_path")
 
         # getting logger instance for logging
         self.logger = get_logger()

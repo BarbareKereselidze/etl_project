@@ -2,6 +2,8 @@ import os
 import json
 from datetime import datetime
 
+from etl_project.config.config_reader import get_config_value
+
 from etl_project.refactor_data.process_csv_files import ProcessCSV
 from etl_project.refactor_data.get_csv_files import GetCsvFiles
 
@@ -11,15 +13,16 @@ from etl_project.logging.logger import get_logger
 class ProcessAndStoreData:
     """ class to process csv files and store summary data in a JSON file """
 
-    def __init__(self, csv_directory, json_directory):
-        self.get_files = GetCsvFiles(csv_directory).get_csv_paths()
+    def __init__(self, config_file_path):
 
         # getting logger instance for logging
         self.logger = get_logger()
 
-        self.csv_directory = csv_directory
-        self.json_directory = json_directory
+        self.csv_directory = get_config_value(config_file_path, "Paths", "csv_path")
+        self.json_directory = get_config_value(config_file_path, "Paths", "json_path")
         self.all_csv_data = []
+
+        self.get_files = GetCsvFiles(self.csv_directory).get_csv_paths()
 
     def turn_data_into_dict(self) -> list:
         """ convert csv data into a list of dictionaries """
@@ -30,14 +33,14 @@ class ProcessAndStoreData:
             processor = ProcessCSV(self.csv_directory)
             filename = os.path.basename(self.csv_directory)
 
-            csv_data[filename] = {
+            csv_data[filename] = [{
                 'csv_file_size_in_mb': processor.get_csv_size(),
                 'df_of_csv_rows_n': processor.get_row_amount(),
                 'df_of_csv_columns_n': processor.get_column_amount(),
                 'df_size_in_mb': processor.get_df_size(),
                 'df_of_column_size_in_mb': processor.get_one_column_size(),
                 'df_of_all_column_size_in_mb': processor.get_column_sizes()
-            }
+            }]
 
             self.all_csv_data.append(csv_data)
 

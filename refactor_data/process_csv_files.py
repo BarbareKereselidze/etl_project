@@ -7,7 +7,7 @@ class ProcessCSV:
 
     def __init__(self, csv_directory: str):
         self.csv_path = csv_directory
-        self.df = pd.read_csv(csv_directory, encoding='latin1')
+        self.df = pd.read_csv(csv_directory)
 
     # get csv file size in mbs
     def get_csv_size(self) -> float:
@@ -33,12 +33,17 @@ class ProcessCSV:
         column_size_in_bytes = self.df.memory_usage(deep=True)
         column_size_in_mb = column_size_in_bytes / (1024 ** 2)
 
+        """the first column size is the index column size which is basically 0 and is not in the list of columns,
+        so I start iterating from index 1 instead of 0
+        """
+        column_sizes_in_mb = column_size_in_mb.iloc[1:]
+
         column_names = self.df.columns.tolist()
 
         column_size_list = [
-            {column_name: round(size, 3)}
-            for column_name, size in zip(column_names, column_size_in_mb)
-
+            {column_name: round(size, 3)
+             for column_name, size in zip(column_names, column_sizes_in_mb)
+             }
         ]
 
         return column_size_list

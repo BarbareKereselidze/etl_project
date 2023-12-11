@@ -1,50 +1,101 @@
 import os
+import time
+import json
+from datetime import datetime
 from google.cloud import bigquery
 
 from etl_project.logging.logger import get_logger
-from etl_project.bigquery_data_upload.get_mysql_data import GetMysqlData
+from etl_project.bigquery_data_upload.table_schema import table_schema
 from etl_project.config.config_reader import get_config_value
 
 
+class BigQueryClient:
+    def __init__(self, config_file_path):
+        self.project_id = get_config_value(config_file_path, "BigQuery", "project_id")
+        self.dataset_id = get_config_value(config_file_path, "BigQuery", "dataset_id")
+        self.table_id = get_config_value(config_file_path, "BigQuery", "table_id")
+
+        self.google_credentials = get_config_value(config_file_path, "Paths", "google_application_credentials_path")
+
+    def set_up_client(self):
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = self.google_credentials
+        return bigquery.Client(project=self.project_id)
+
+    def get_table_ref(self, client):
+        dataset_ref = client.dataset(self.dataset_id)
+        return dataset_ref.table(self.table_id)
+
+
+class JsonDataModifier:
+    @staticmethod
+    def modify_json(json_file_path, data_file_path):
+        current_datetime = datetime.now()
+        formatted_datetime = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+        json_data = json.load(open(json_file_path))
+        adjusted_json_data = [
+            {
+                'csv_file_name': list(row.keys())[0],
+                'created_at': formatted_datetime,
+                'modified_at': formatted_datetime,
+                'csv_file_info': row[list(row.keys())[0]]
+            }
+            for row in json_data
+        ]
+
+        with open(data_file_path, "w") as adjusted_file:
+            adjusted_file.write('\n'.join(json.dumps(row) for row in adjusted_json_data))
+
+
+class SchemaFormatter:
+    @staticmethod
+    def format_schema(schema):
+        formatted_schema = []
+        for row in schema:
+            if 'fields' in row:
+                sub_schema = SchemaFormatter.format_schema(row['fields'])
+                formatted_schema.append(bigquery.SchemaField(row['name'], row['type'], row['mode'], fields=sub_schema))
+            else:
+                formatted_schema.append(bigquery.SchemaField(row['name'], row['type'], row['mode']))
+
+        return formatted_schema
+
+
 class UploadDataToBigQuery:
-    def __init__(self, config_file_path: str):
-        self.google_credentials: str = get_config_value(config_file_path, "Paths", "google_application_credentials_path")
-
-        self.project_id: str = get_config_value(config_file_path, "BigQuery", "project_id")
-        self.dataset_id: str = get_config_value(config_file_path, "BigQuery", "dataset_id")
-        self.table_id: str = get_config_value(config_file_path, "BigQuery", "table_id")
-
-        # getting logger instance for logging
+    def __init__(self, config_file_path, json_file_path):
+        self.config_file_path = config_file_path
+        self.json_file_path = json_file_path
+        self.data_file_path = get_config_value(config_file_path, "Paths", "data_file_path")
+        self.schema = table_schema
         self.logger = get_logger()
+        self.bigquery_client = BigQueryClient(config_file_path)
 
-        self.result_df = GetMysqlData(config_file_path).select_all_data()
+    def write_files_to_cloud(self):
+        client = self.bigquery_client.set_up_client()
+        table_ref = self.bigquery_client.get_table_ref(client)
 
-    def upload_data(self) -> None:
-        """ upload data from mysql dataframe to BigQuery"""
+        job_config = bigquery.LoadJobConfig()
+        job_config.schema = SchemaFormatter.format_schema(self.schema)
+        job_config.source_format = bigquery.SourceFormat.NEWLINE_DELIMITED_JSON
 
-        try:
-            # set google credentials and initialize BigQuery client
-            os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = self.google_credentials
-            client = bigquery.Client(project=self.project_id)
+        # job_config.write_disposition = "WRITE_APPEND"
+        job_config.write_disposition = "WRITE_TRUNCATE"
 
-            # get dataset and table refrences
-            dataset_ref = client.dataset(self.dataset_id)
-            table_ref = dataset_ref.table(self.table_id)
+        JsonDataModifier.modify_json(self.json_file_path, self.data_file_path)
 
-            # load data into a Bigquery table and wait for it to complete
-            job_config = bigquery.LoadJobConfig(
-                write_disposition="WRITE_TRUNCATE",
-            )
+        with open(self.data_file_path, "rb") as source_file:
+            job = client.load_table_from_file(source_file, table_ref, job_config=job_config)
 
-            job = client.load_table_from_dataframe(self.result_df, table_ref, job_config=job_config)
+        while job.state != "DONE":
+            job.reload()
+            time.sleep(2)
 
-            job.result()
+        if job and job.errors:
+            for error in job.errors:
+                print(error)
+        else:
+            print("Job completed successfully.")
 
-            self.logger.info("committed changes to BigQuery")
-        except Exception as error:
-
-            self.logger.error(f"error uploading data to BigQuery: {error}")
-
-
+        print(job.result())
 
 
