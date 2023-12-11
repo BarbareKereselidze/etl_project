@@ -1,0 +1,330 @@
+[
+    {
+        "fake_data_1702301197.698868.csv": [
+            {
+                "csv_file_size_in_mb": 0.036,
+                "df_of_csv_rows_n": 457,
+                "df_of_csv_columns_n": 6,
+                "df_size_in_mb": 0.131,
+                "df_of_column_size_in_mb": 0.031,
+                "df_of_all_column_size_in_mb": [
+                    {
+                        "name": 0.0,
+                        "job": 0.031,
+                        "company": 0.034,
+                        "salary": 0.032,
+                        "credit_card_number": 0.003,
+                        "credit_card_expire": 0.003
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "fake_data_1702300846.567986.csv": [
+            {
+                "csv_file_size_in_mb": 0.09,
+                "df_of_csv_rows_n": 837,
+                "df_of_csv_columns_n": 5,
+                "df_size_in_mb": 0.311,
+                "df_of_column_size_in_mb": 0.056,
+                "df_of_all_column_size_in_mb": [
+                    {
+                        "name": 0.0,
+                        "birthdate": 0.056,
+                        "email": 0.053,
+                        "address": 0.063,
+                        "phone_number": 0.08
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "fake_data_1702300846.569758.csv": [
+            {
+                "csv_file_size_in_mb": 0.067,
+                "df_of_csv_rows_n": 837,
+                "df_of_csv_columns_n": 6,
+                "df_size_in_mb": 0.239,
+                "df_of_column_size_in_mb": 0.056,
+                "df_of_all_column_size_in_mb": [
+                    {
+                        "name": 0.0,
+                        "job": 0.056,
+                        "company": 0.062,
+                        "salary": 0.059,
+                        "credit_card_number": 0.006,
+                        "credit_card_expire": 0.006
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "fake_data_1702300898.338046.csv": [
+            {
+                "csv_file_size_in_mb": 0.036,
+                "df_of_csv_rows_n": 450,
+                "df_of_csv_columns_n": 6,
+                "df_size_in_mb": 0.129,
+                "df_of_column_size_in_mb": 0.03,
+                "df_of_all_column_size_in_mb": [
+                    {
+                        "name": 0.0,
+                        "job": 0.03,
+                        "company": 0.033,
+                        "salary": 0.032,
+                        "credit_card_number": 0.003,
+                        "credit_card_expire": 0.003
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "fake_data_1702300895.322959.csv": [
+            {
+                "csv_file_size_in_mb": 0.077,
+                "df_of_csv_rows_n": 709,
+                "df_of_csv_columns_n": 5,
+                "df_size_in_mb": 0.264,
+                "df_of_column_size_in_mb": 0.048,
+                "df_of_all_column_size_in_mb": [
+                    {
+                        "name": 0.0,
+                        "birthdate": 0.048,
+                        "email": 0.045,
+                        "address": 0.053,
+                        "phone_number": 0.068
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "fake_data_1702300895.324285.csv": [
+            {
+                "csv_file_size_in_mb": 0.056,
+                "df_of_csv_rows_n": 709,
+                "df_of_csv_columns_n": 6,
+                "df_size_in_mb": 0.203,
+                "df_of_column_size_in_mb": 0.048,
+                "df_of_all_column_size_in_mb": [
+                    {
+                        "name": 0.0,
+                        "job": 0.048,
+                        "company": 0.052,
+                        "salary": 0.05,
+                        "credit_card_number": 0.005,
+                        "credit_card_expire": 0.005
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "fake_data_1702302085.796792.csv": [
+            {
+                "csv_file_size_in_mb": 0.059,
+                "df_of_csv_rows_n": 754,
+                "df_of_csv_columns_n": 6,
+                "df_size_in_mb": 0.215,
+                "df_of_column_size_in_mb": 0.051,
+                "df_of_all_column_size_in_mb": [
+                    {
+                        "name": 0.0,
+                        "job": 0.051,
+                        "company": 0.056,
+                        "salary": 0.053,
+                        "credit_card_number": 0.006,
+                        "credit_card_expire": 0.006
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "fake_data_1702301990.770671.csv": [
+            {
+                "csv_file_size_in_mb": 0.095,
+                "df_of_csv_rows_n": 883,
+                "df_of_csv_columns_n": 5,
+                "df_size_in_mb": 0.329,
+                "df_of_column_size_in_mb": 0.059,
+                "df_of_all_column_size_in_mb": [
+                    {
+                        "name": 0.0,
+                        "birthdate": 0.059,
+                        "email": 0.056,
+                        "address": 0.066,
+                        "phone_number": 0.085
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "fake_data_1702302085.795378.csv": [
+            {
+                "csv_file_size_in_mb": 0.081,
+                "df_of_csv_rows_n": 754,
+                "df_of_csv_columns_n": 5,
+                "df_size_in_mb": 0.281,
+                "df_of_column_size_in_mb": 0.051,
+                "df_of_all_column_size_in_mb": [
+                    {
+                        "name": 0.0,
+                        "birthdate": 0.051,
+                        "email": 0.048,
+                        "address": 0.057,
+                        "phone_number": 0.073
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "fake_data_1702301118.476346.csv": [
+            {
+                "csv_file_size_in_mb": 0.107,
+                "df_of_csv_rows_n": 998,
+                "df_of_csv_columns_n": 5,
+                "df_size_in_mb": 0.371,
+                "df_of_column_size_in_mb": 0.067,
+                "df_of_all_column_size_in_mb": [
+                    {
+                        "name": 0.0,
+                        "birthdate": 0.067,
+                        "email": 0.064,
+                        "address": 0.075,
+                        "phone_number": 0.096
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "fake_data_1702301990.772319.csv": [
+            {
+                "csv_file_size_in_mb": 0.07,
+                "df_of_csv_rows_n": 883,
+                "df_of_csv_columns_n": 6,
+                "df_size_in_mb": 0.252,
+                "df_of_column_size_in_mb": 0.059,
+                "df_of_all_column_size_in_mb": [
+                    {
+                        "name": 0.0,
+                        "job": 0.059,
+                        "company": 0.065,
+                        "salary": 0.062,
+                        "credit_card_number": 0.007,
+                        "credit_card_expire": 0.007
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "fake_data_1702301118.478192.csv": [
+            {
+                "csv_file_size_in_mb": 0.079,
+                "df_of_csv_rows_n": 998,
+                "df_of_csv_columns_n": 6,
+                "df_size_in_mb": 0.285,
+                "df_of_column_size_in_mb": 0.067,
+                "df_of_all_column_size_in_mb": [
+                    {
+                        "name": 0.0,
+                        "job": 0.067,
+                        "company": 0.074,
+                        "salary": 0.07,
+                        "credit_card_number": 0.008,
+                        "credit_card_expire": 0.008
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "fake_data_1702302276.7429.csv": [
+            {
+                "csv_file_size_in_mb": 0.093,
+                "df_of_csv_rows_n": 862,
+                "df_of_csv_columns_n": 5,
+                "df_size_in_mb": 0.321,
+                "df_of_column_size_in_mb": 0.058,
+                "df_of_all_column_size_in_mb": [
+                    {
+                        "name": 0.0,
+                        "birthdate": 0.058,
+                        "email": 0.055,
+                        "address": 0.065,
+                        "phone_number": 0.083
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "fake_data_1702301197.697966.csv": [
+            {
+                "csv_file_size_in_mb": 0.049,
+                "df_of_csv_rows_n": 457,
+                "df_of_csv_columns_n": 5,
+                "df_size_in_mb": 0.17,
+                "df_of_column_size_in_mb": 0.031,
+                "df_of_all_column_size_in_mb": [
+                    {
+                        "name": 0.0,
+                        "birthdate": 0.031,
+                        "email": 0.029,
+                        "address": 0.034,
+                        "phone_number": 0.044
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "fake_data_1702302276.744509.csv": [
+            {
+                "csv_file_size_in_mb": 0.069,
+                "df_of_csv_rows_n": 862,
+                "df_of_csv_columns_n": 6,
+                "df_size_in_mb": 0.247,
+                "df_of_column_size_in_mb": 0.058,
+                "df_of_all_column_size_in_mb": [
+                    {
+                        "name": 0.0,
+                        "job": 0.058,
+                        "company": 0.064,
+                        "salary": 0.061,
+                        "credit_card_number": 0.007,
+                        "credit_card_expire": 0.007
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "fake_data_1702300898.337119.csv": [
+            {
+                "csv_file_size_in_mb": 0.048,
+                "df_of_csv_rows_n": 450,
+                "df_of_csv_columns_n": 5,
+                "df_size_in_mb": 0.167,
+                "df_of_column_size_in_mb": 0.03,
+                "df_of_all_column_size_in_mb": [
+                    {
+                        "name": 0.0,
+                        "birthdate": 0.03,
+                        "email": 0.029,
+                        "address": 0.034,
+                        "phone_number": 0.043
+                    }
+                ]
+            }
+        ]
+    }
+]
