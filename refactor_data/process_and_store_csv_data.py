@@ -39,6 +39,7 @@ class ProcessAndStoreData:
                 'df_of_csv_columns_n': processor.get_column_amount(),
                 'df_size_in_mb': processor.get_df_size(),
                 'df_of_column_size_in_mb': processor.get_one_column_size(),
+                'hash': processor.get_hash(),
                 'df_of_all_column_size_in_mb': processor.get_column_sizes()
             }]
 

@@ -1,4 +1,5 @@
 import os
+import hashlib
 import pandas as pd
 
 
@@ -61,3 +62,12 @@ class ProcessCSV:
         df_size_in_mb = df_size_in_bytes / (1024 ** 2)
 
         return df_size_in_mb.__round__(3)
+
+    def get_hash(self):
+        hasher = hashlib.sha256()
+
+        with open(self.csv_path, 'rb') as file:
+            for chunk in iter(lambda: file.read(4096), b''):
+                hasher.update(chunk)
+
+        return hasher.hexdigest()

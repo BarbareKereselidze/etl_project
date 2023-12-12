@@ -45,6 +45,11 @@ table_schema = [
                 'mode': 'REQUIRED'
             },
             {
+                'name': 'hash',
+                'type': 'STRING',
+                'mode': 'REQUIRED'
+            },
+            {
                 'name': 'df_of_all_column_size_in_mb',
                 'type': 'RECORD',
                 'mode': 'REPEATED',
