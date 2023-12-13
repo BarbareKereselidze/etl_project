@@ -27,27 +27,32 @@ The project is organized into several directories, each serving a specific purpo
    * **fake_data_to_csv.py** <br>
      Converts lists of fake data into CSV files, including timestamps in the filenames.
 4. **Refactor Data**
-   * **csv_to_json.py** <br>
-     Converts CSV files to JSON format.
    * **get_csv_files.py** <br>
      Retrieves the paths of CSV files.
    * **process_csv.py** <br>
      Analyzes CSV files and provides summary statistics.
    * **process_and_store_csv_data.py** <br>
      Processes CSV files and stores summary data in JSON files
+   * **modify_json_for_upload.py** <br>
+     Adds created_at and modified_fields to each csv_file description.
 5. **Data**
    * **csv_files**
    * **json_files**
    * The data directory is where generated CSV and JSON files are stored. If the csv_files and json_files directories do not exist, the code will generate them and log the directory creation.
-6. **BigQuery Data Upload**
+6. **BigQuery Schema**
    * **table_schema.py** <br>
      Holds the table schema for BigQuery.
+   * **format_schema.py** <br>
+     Formats the schema to turn them into BigQuery.SchemaField objects.
+7. **BigQuery Data Upload**
+   * **connect_to_bigquery.py** <br>
+     Initializes a BigQueryClient, and connects to the table
    * **upload_data_to_cloud.py** <br>
-     Uploads data to Google BigQuery.
-7. **Main**
+     Uploads new or modified data into the BigQuery table.
+8. **Main**
    * **main.py** <br>
    * The main script running the entire ETL process. It runs all the classes in a sequence, ensuring that data is generated, processed, and uploaded systematically.
-8. **Requirements**
+9. **Requirements**
     * **requirements.txt**  <br>
          Lists project dependencies generated from pipreqs. Ensure these dependencies are installed using:
         ```
@@ -77,8 +82,3 @@ To keep the data up-to-date, the program is scheduled to run daily every hour.
    ```
    0 0 * * * /path/to/python /path/to/main.py
    0 * * * * /path/to/python /path/to/main.py
-
-   ```
-   path to main should be replaced by the actual path to your Main.py file.
-   for example: /home/user/PycharmProjects/csv_project/etl_project/main/main.py
-5. Save and exit the editor. The program will now run at every hour every day.
