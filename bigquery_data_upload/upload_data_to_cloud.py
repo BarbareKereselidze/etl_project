@@ -8,7 +8,7 @@ from etl_project.bigquery_schema.table_schema import table_schema
 from etl_project.bigquery_schema.format_schema import SchemaFormatter
 from etl_project.bigquery_data_upload.connect_to_BigQuery import BigQueryClient
 from etl_project.config.config_reader import get_config_value
-from etl_project.refactor_data.modfy_json_for_upload import JsonDataModifier
+from etl_project.refactor_data.modify_json_for_upload import JsonDataModifier
 
 from etl_project.logging.logger import get_logger
 
