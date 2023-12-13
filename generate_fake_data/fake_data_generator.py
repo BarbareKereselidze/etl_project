@@ -5,7 +5,7 @@ from random import randint
 class GenerateFakeData:
     """ class to generate fake user and job data using the Faker library """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.fake = Faker()
 
         # create lists to store fake data

@@ -1,101 +1,121 @@
-import os
 import time
-import json
-from datetime import datetime
+import pandas as pd
+import pandas_gbq
 from google.cloud import bigquery
 
-from etl_project.logging.logger import get_logger
-from etl_project.bigquery_data_upload.table_schema import table_schema
+
+from etl_project.bigquery_schema.table_schema import table_schema
+from etl_project.bigquery_schema.format_schema import SchemaFormatter
+from etl_project.bigquery_data_upload.connect_to_BigQuery import BigQueryClient
 from etl_project.config.config_reader import get_config_value
+from etl_project.refactor_data.modfy_json_for_upload import JsonDataModifier
 
-
-class BigQueryClient:
-    def __init__(self, config_file_path):
-        self.project_id = get_config_value(config_file_path, "BigQuery", "project_id")
-        self.dataset_id = get_config_value(config_file_path, "BigQuery", "dataset_id")
-        self.table_id = get_config_value(config_file_path, "BigQuery", "table_id")
-
-        self.google_credentials = get_config_value(config_file_path, "Paths", "google_application_credentials_path")
-
-    def set_up_client(self):
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = self.google_credentials
-        return bigquery.Client(project=self.project_id)
-
-    def get_table_ref(self, client):
-        dataset_ref = client.dataset(self.dataset_id)
-        return dataset_ref.table(self.table_id)
-
-
-class JsonDataModifier:
-    @staticmethod
-    def modify_json(json_file_path, data_file_path):
-        current_datetime = datetime.now()
-        formatted_datetime = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-
-        json_data = json.load(open(json_file_path))
-        adjusted_json_data = [
-            {
-                'csv_file_name': list(row.keys())[0],
-                'created_at': formatted_datetime,
-                'modified_at': formatted_datetime,
-                'csv_file_info': row[list(row.keys())[0]]
-            }
-            for row in json_data
-        ]
-
-        with open(data_file_path, "w") as adjusted_file:
-            adjusted_file.write('\n'.join(json.dumps(row) for row in adjusted_json_data))
-
-
-class SchemaFormatter:
-    @staticmethod
-    def format_schema(schema):
-        formatted_schema = []
-        for row in schema:
-            if 'fields' in row:
-                sub_schema = SchemaFormatter.format_schema(row['fields'])
-                formatted_schema.append(bigquery.SchemaField(row['name'], row['type'], row['mode'], fields=sub_schema))
-            else:
-                formatted_schema.append(bigquery.SchemaField(row['name'], row['type'], row['mode']))
-
-        return formatted_schema
+from etl_project.logging.logger import get_logger
 
 
 class UploadDataToBigQuery:
-    def __init__(self, config_file_path, json_file_path):
-        self.config_file_path = config_file_path
-        self.json_file_path = json_file_path
-        self.data_file_path = get_config_value(config_file_path, "Paths", "data_file_path")
-        self.schema = table_schema
+    def __init__(self, config_file_path: str, json_file_path: str) -> None:
+        """ initializes an UploadDataToBigQuery instance """
+
+        self.config_file_path: str = config_file_path
+        self.json_file_path: str = json_file_path
+        self.data_file_path: str = get_config_value(config_file_path, "Paths", "data_file_path")
+
         self.logger = get_logger()
+
+        self.schema: str = table_schema
         self.bigquery_client = BigQueryClient(config_file_path)
+        self.client = self.bigquery_client.set_up_client()
+        self.table_ref = self.bigquery_client.get_table_ref(self.client)
+        self.job_config = bigquery.LoadJobConfig()
 
-    def write_files_to_cloud(self):
-        client = self.bigquery_client.set_up_client()
-        table_ref = self.bigquery_client.get_table_ref(client)
+        self.bigquery_df = pd.read_gbq(f"SELECT * FROM {self.table_ref}")
+        self.json_df = pd.read_json(self.data_file_path, lines=True)
 
-        job_config = bigquery.LoadJobConfig()
-        job_config.schema = SchemaFormatter.format_schema(self.schema)
-        job_config.source_format = bigquery.SourceFormat.NEWLINE_DELIMITED_JSON
+    def write_files_to_cloud(self) -> None:
+        """ writes files to Google Cloud BigQuery
+        this method sets up job configurations, adds new data, and logs the status of the upload
+        """
 
-        # job_config.write_disposition = "WRITE_APPEND"
-        job_config.write_disposition = "WRITE_TRUNCATE"
+        self.job_config.schema = SchemaFormatter.format_schema(self.schema)
+        self.job_config.source_format = bigquery.SourceFormat.PARQUET
 
-        JsonDataModifier.modify_json(self.json_file_path, self.data_file_path)
+        self.job_config.write_disposition = "WRITE_APPEND"
 
-        with open(self.data_file_path, "rb") as source_file:
-            job = client.load_table_from_file(source_file, table_ref, job_config=job_config)
+        job = self.add_new_data()
 
+        # wait for the job to complete
         while job.state != "DONE":
             job.reload()
             time.sleep(2)
 
         if job and job.errors:
             for error in job.errors:
-                print(error)
+                self.logger.error(error)
         else:
-            print("Job completed successfully.")
+            self.logger.info("new data uploaded to BigQuery")
 
-        print(job.result())
+        job.result()
+
+        self.modify_data()
+
+    def add_new_data(self) -> bigquery.LoadJobConfig:
+        """ adds new data to Google Cloud BigQuery
+        this method modifies JSON data, reads it into a DataFrame, and loads it into BigQuery
+        """
+
+        JsonDataModifier.modify_json(self.json_file_path, self.data_file_path)
+
+        # select data that is in json and not on BigQuery
+        new_data = self.json_df[~self.json_df['csv_file_name'].isin(self.bigquery_df['csv_file_name'])]
+
+        # load the new data into BigQuery
+        job = self.client.load_table_from_dataframe(new_data, self.table_ref, job_config=self.job_config)
+
+        return job
+
+    def modify_data(self) -> None:
+        """ modifies data in Google Cloud BigQuery
+        this method identifies modified rows and updates them in BigQuery
+        """
+
+        common_data = pd.merge(self.json_df, self.bigquery_df, on='csv_file_name', how='inner')
+
+        # identify rows with different hash values
+        mask = common_data['csv_file_info_x'].apply(lambda x: x[0].get('hash') if x else None) != common_data[
+            'csv_file_info_y'].apply(lambda x: x[0].get('hash') if x else None)
+
+        # check if there are any True values in the mask
+        if mask.any():
+            # create a new dataframe with only the modified rows
+            new_data = common_data[mask].copy()
+
+            new_data['created_at'] = new_data['created_at_y']
+            new_data['modified_at'] = new_data['modified_at_x']
+            new_data['csv_file_info'] = new_data['csv_file_info_x']
+
+            new_data = new_data[['csv_file_name', 'created_at', 'modified_at', 'csv_file_info']]
+
+            # make sure the dataframe has a proper index
+            new_data.reset_index(drop=True, inplace=True)
+
+            pd.set_option('display.max_columns', None)
+
+            # create delete query
+            for index, row in new_data.iterrows():
+                delete_query = f"""
+                DELETE FROM {self.table_ref}
+                WHERE csv_file_name = '{row['csv_file_name']}'
+                """
+
+                # execute the delete query
+                query_job = self.client.query(delete_query)
+                query_job.result()
+
+            # append the modified rows in BigQuery using pandas_gbq
+            pandas_gbq.to_gbq(new_data, destination_table=str(self.table_ref), if_exists='append',
+                              table_schema=self.schema)
+
+            self.logger.info("csv data has been modified")
 
 

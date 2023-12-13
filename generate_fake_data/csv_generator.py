@@ -11,7 +11,7 @@ from etl_project.logging.logger import get_logger
 class GenerateCsv:
     """ class to generate csv files from fake user and fake job data """
 
-    def __init__(self, config_file_path: str):
+    def __init__(self, config_file_path: str) -> None:
         fake_data_generator = GenerateFakeData()
 
         self.fake_user_data = fake_data_generator.generate_fake_user()
@@ -47,8 +47,8 @@ class GenerateCsv:
                 self.logger.error(f"created directory as: {self.csv_path}")
 
     def generate_csv(self) -> None:
-
         """ generate fake user and job data csv files """
+
         self.create_csv(self.fake_user_data)
         self.create_csv(self.fake_job_data)
 

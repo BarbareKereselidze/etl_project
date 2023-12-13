@@ -6,7 +6,7 @@ import pandas as pd
 class ProcessCSV:
     """ class to process csv files and extract information about their size and structure """
 
-    def __init__(self, csv_directory: str):
+    def __init__(self, csv_directory: str) -> None:
         self.csv_path = csv_directory
         self.df = pd.read_csv(csv_directory)
 
@@ -63,7 +63,8 @@ class ProcessCSV:
 
         return df_size_in_mb.__round__(3)
 
-    def get_hash(self):
+    # generate unique hash for each of the csvs
+    def get_hash(self) -> str:
         hasher = hashlib.sha256()
 
         with open(self.csv_path, 'rb') as file:

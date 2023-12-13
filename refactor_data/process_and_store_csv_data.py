@@ -13,7 +13,7 @@ from etl_project.logging.logger import get_logger
 class ProcessAndStoreData:
     """ class to process csv files and store summary data in a JSON file """
 
-    def __init__(self, config_file_path):
+    def __init__(self, config_file_path) -> None:
 
         # getting logger instance for logging
         self.logger = get_logger()

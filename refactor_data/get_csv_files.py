@@ -3,7 +3,7 @@ import os
 
 class GetCsvFiles:
     """ class to get a list of csv file paths in the given directory """
-    def __init__(self, csv_directory: str):
+    def __init__(self, csv_directory: str) -> None:
         self.directory_path = csv_directory
         self.csv_paths = []
 
