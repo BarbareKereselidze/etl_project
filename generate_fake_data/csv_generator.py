@@ -2,10 +2,10 @@ import os
 import csv
 from datetime import datetime
 
-from etl_project.config.config_reader import get_config_value
-from etl_project.generate_fake_data.fake_data_generator import GenerateFakeData
+from config.config_reader import get_config_value
+from generate_fake_data.fake_data_generator import GenerateFakeData
 
-from etl_project.logging.logger import get_logger
+from logging.logger import get_logger
 
 
 class GenerateCsv:
@@ -49,6 +49,9 @@ class GenerateCsv:
     def generate_csv(self) -> None:
         """ generate fake user and job data csv files """
 
+        # :TODO Needs to add/extend capability to receive list of arguments
+        # :TODO or at least have those two calls in for loop. By doing so, we
+        # :TODO follow DRY rule (Don't repeat yourself)
         self.create_csv(self.fake_user_data)
         self.create_csv(self.fake_job_data)
 

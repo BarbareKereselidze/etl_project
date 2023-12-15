@@ -2,10 +2,10 @@ import os
 from google.cloud import bigquery
 from google.cloud.exceptions import NotFound
 
-from etl_project.config.config_reader import get_config_value
-from etl_project.bigquery_schema.table_schema import table_schema
+from config.config_reader import get_config_value
+from bigquery_schema.table_schema import table_schema
 
-from etl_project.logging.logger import get_logger
+from logging.logger import get_logger
 
 
 class BigQueryClient:

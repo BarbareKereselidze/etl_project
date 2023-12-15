@@ -2,12 +2,12 @@ import os
 import json
 from datetime import datetime
 
-from etl_project.config.config_reader import get_config_value
+from config.config_reader import get_config_value
 
-from etl_project.refactor_data.process_csv_files import ProcessCSV
-from etl_project.refactor_data.get_csv_files import GetCsvFiles
+from refactor_data.process_csv_files import ProcessCSV
+from refactor_data.get_csv_files import GetCsvFiles
 
-from etl_project.logging.logger import get_logger
+from logging.logger import get_logger
 
 
 class ProcessAndStoreData:
@@ -51,6 +51,7 @@ class ProcessAndStoreData:
         """ store summary data in a JSON file """
 
         current_timestamp = datetime.now().timestamp()
+        # :TODO Better to use self.json_directory directly when necessary, but we can argue about that :D
         json_directory_path = self.json_directory
         filename = f"{json_directory_path}/summary_{current_timestamp}.json"
 

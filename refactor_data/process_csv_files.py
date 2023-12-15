@@ -13,7 +13,7 @@ class ProcessCSV:
     # get csv file size in mbs
     def get_csv_size(self) -> float:
         csv_size_in_bytes = os.path.getsize(self.csv_path)
-        csv_size_in_mb = csv_size_in_bytes / (1024 ** 2)
+        csv_size_in_mb = csv_size_in_bytes / (1024 ** 2)  # :TODO Can be define as constant (used 4 time just here)
 
         return csv_size_in_mb.__round__(3)
 

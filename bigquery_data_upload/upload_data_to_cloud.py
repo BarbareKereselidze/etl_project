@@ -4,15 +4,17 @@ import pandas_gbq
 from google.cloud import bigquery
 
 
-from etl_project.bigquery_schema.table_schema import table_schema
-from etl_project.bigquery_schema.format_schema import SchemaFormatter
-from etl_project.bigquery_data_upload.connect_to_BigQuery import BigQueryClient
-from etl_project.config.config_reader import get_config_value
-from etl_project.refactor_data.modify_json_for_upload import JsonDataModifier
+from bigquery_schema.table_schema import table_schema
+from bigquery_schema.format_schema import SchemaFormatter
+from bigquery_data_upload.connect_to_BigQuery import BigQueryClient
+from config.config_reader import get_config_value
+from refactor_data.modify_json_for_upload import JsonDataModifier
 
-from etl_project.logging.logger import get_logger
+from logging.logger import get_logger
 
 
+# :TODO Verb in class name seems and sounds like unusual. One of the alternative of class, named
+# :TODO 'UploadDataToBigQuery' would be 'DataUploaderToBigQuery' or 'BigQueryUploader', etc...
 class UploadDataToBigQuery:
     def __init__(self, config_file_path: str, json_file_path: str) -> None:
         """ initializes an UploadDataToBigQuery instance """
@@ -100,7 +102,10 @@ class UploadDataToBigQuery:
             new_data.reset_index(drop=True, inplace=True)
 
             pd.set_option('display.max_columns', None)
-
+            # :TODO Potentially, It will raise "Quota Limit exceeded" error, if you run for many csvs at once.
+            # :TODO Read "Data manipulation language" tab here: https://cloud.google.com/bigquery/quotas,
+            # :TODO Must be only one query which will execute, for more than one csv file, you can use
+            # :TODO "WHERE csv_file_name in ()" style query
             # create delete query
             for index, row in new_data.iterrows():
                 delete_query = f"""
@@ -117,5 +122,3 @@ class UploadDataToBigQuery:
                               table_schema=self.schema)
 
             self.logger.info("csv data has been modified")
-
-

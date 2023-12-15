@@ -1,4 +1,4 @@
-from google.cloud import bigquery
+from google.cloud import bigquery  # :TODO bigquery client dependency is not present in the requirements.txt file
 
 
 class SchemaFormatter:
