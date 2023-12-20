@@ -16,9 +16,8 @@ class ProcessCSV:
     @get_file_size_in_mb
     def get_csv_size(self) -> float:
         csv_size_in_bytes = os.path.getsize(self.csv_path)
-        csv_size_in_mb = csv_size_in_bytes
 
-        return csv_size_in_mb
+        return csv_size_in_bytes
 
     # get the row amount of csv file
     def get_row_amount(self) -> float:
