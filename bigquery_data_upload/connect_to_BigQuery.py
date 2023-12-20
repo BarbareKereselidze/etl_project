@@ -2,21 +2,20 @@ import os
 from google.cloud import bigquery
 from google.cloud.exceptions import NotFound
 
-from config.config_reader import get_config_value
 from bigquery_schema.table_schema import table_schema
 
-from logging.logger import get_logger
+from utils.logger import get_logger
 
 
 class BigQueryClient:
     """ initializes a BigQueryClient with the specified configuration file path """
 
-    def __init__(self, config_file_path: str) -> None:
-        self.project_id: str = get_config_value(config_file_path, "BigQuery", "project_id")
-        self.dataset_id: str = get_config_value(config_file_path, "BigQuery", "dataset_id")
-        self.table_id: str = get_config_value(config_file_path, "BigQuery", "table_id")
+    def __init__(self, config_dict: dict) -> None:
+        self.project_id: str = config_dict['BigQuery']['project_id']
+        self.dataset_id: str = config_dict['BigQuery']['dataset_id']
+        self.table_id: str = config_dict['BigQuery']['table_id']
 
-        self.google_credentials: str = get_config_value(config_file_path, "Paths", "google_application_credentials_path")
+        self.google_credentials: str = config_dict['Paths']['google_application_credentials_path']
 
         self.table_schema = table_schema
 

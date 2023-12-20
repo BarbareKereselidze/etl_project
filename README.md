@@ -45,9 +45,9 @@ The project is organized into several directories, each serving a specific purpo
    * **format_schema.py** <br>
      Formats the schema to turn them into BigQuery.SchemaField objects.
 7. **BigQuery Data Upload**
-   * **connect_to_bigquery.py** <br>
+   * **connect_to_BigQuery.py** <br>
      Initializes a BigQueryClient, and connects to the table
-   * **upload_data_to_cloud.py** <br>
+   * **upload_data_to_BigQuery.py** <br>
      Uploads new or modified data into the BigQuery table.
 8. **Main**
    * **main.py** <br>

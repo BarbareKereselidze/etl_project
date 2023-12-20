@@ -7,26 +7,22 @@ from google.cloud import bigquery
 from bigquery_schema.table_schema import table_schema
 from bigquery_schema.format_schema import SchemaFormatter
 from bigquery_data_upload.connect_to_BigQuery import BigQueryClient
-from config.config_reader import get_config_value
-from refactor_data.modify_json_for_upload import JsonDataModifier
 
-from logging.logger import get_logger
+from utils.logger import get_logger
 
 
-# :TODO Verb in class name seems and sounds like unusual. One of the alternative of class, named
-# :TODO 'UploadDataToBigQuery' would be 'DataUploaderToBigQuery' or 'BigQueryUploader', etc...
-class UploadDataToBigQuery:
-    def __init__(self, config_file_path: str, json_file_path: str) -> None:
+class BigQueryDataUploader:
+    def __init__(self, config_dict: dict, json_file_path: str) -> None:
         """ initializes an UploadDataToBigQuery instance """
 
-        self.config_file_path: str = config_file_path
+        # self.config_file_path: str = config_file_path
         self.json_file_path: str = json_file_path
-        self.data_file_path: str = get_config_value(config_file_path, "Paths", "data_file_path")
+        self.data_file_path: str = config_dict['Paths']['data_file_path']
 
         self.logger = get_logger()
 
         self.schema: str = table_schema
-        self.bigquery_client = BigQueryClient(config_file_path)
+        self.bigquery_client = BigQueryClient(config_dict)
         self.client = self.bigquery_client.set_up_client()
         self.table_ref = self.bigquery_client.get_table_ref(self.client)
         self.job_config = bigquery.LoadJobConfig()
@@ -66,8 +62,6 @@ class UploadDataToBigQuery:
         this method modifies JSON data, reads it into a DataFrame, and loads it into BigQuery
         """
 
-        JsonDataModifier.modify_json(self.json_file_path, self.data_file_path)
-
         # select data that is in json and not on BigQuery
         new_data = self.json_df[~self.json_df['csv_file_name'].isin(self.bigquery_df['csv_file_name'])]
 
@@ -101,21 +95,17 @@ class UploadDataToBigQuery:
             # make sure the dataframe has a proper index
             new_data.reset_index(drop=True, inplace=True)
 
-            pd.set_option('display.max_columns', None)
-            # :TODO Potentially, It will raise "Quota Limit exceeded" error, if you run for many csvs at once.
-            # :TODO Read "Data manipulation language" tab here: https://cloud.google.com/bigquery/quotas,
-            # :TODO Must be only one query which will execute, for more than one csv file, you can use
-            # :TODO "WHERE csv_file_name in ()" style query
-            # create delete query
-            for index, row in new_data.iterrows():
-                delete_query = f"""
-                DELETE FROM {self.table_ref}
-                WHERE csv_file_name = '{row['csv_file_name']}'
-                """
+            # get modified csv file names to delete duplicate rows
+            csv_file_names = new_data['csv_file_name'].tolist()
 
-                # execute the delete query
-                query_job = self.client.query(delete_query)
-                query_job.result()
+            delete_query = f"""
+                DELETE FROM {self.table_ref}
+                WHERE csv_file_name IN ({', '.join([f"'{name}'" for name in csv_file_names])})
+            """
+
+            # execute the delete query
+            query_job = self.client.query(delete_query)
+            query_job.result()
 
             # append the modified rows in BigQuery using pandas_gbq
             pandas_gbq.to_gbq(new_data, destination_table=str(self.table_ref), if_exists='append',

@@ -2,27 +2,25 @@ import os
 import json
 from datetime import datetime
 
-from config.config_reader import get_config_value
-
 from refactor_data.process_csv_files import ProcessCSV
-from refactor_data.get_csv_files import GetCsvFiles
+from utils.get_csv_files import get_csv_paths
 
-from logging.logger import get_logger
+from utils.logger import get_logger
 
 
 class ProcessAndStoreData:
     """ class to process csv files and store summary data in a JSON file """
 
-    def __init__(self, config_file_path) -> None:
+    def __init__(self, config_dict: dict) -> None:
 
         # getting logger instance for logging
         self.logger = get_logger()
 
-        self.csv_directory = get_config_value(config_file_path, "Paths", "csv_path")
-        self.json_directory = get_config_value(config_file_path, "Paths", "json_path")
+        self.csv_directory = config_dict['Paths']['csv_path']
+        self.json_directory = config_dict['Paths']['json_path']
         self.all_csv_data = []
 
-        self.get_files = GetCsvFiles(self.csv_directory).get_csv_paths()
+        self.get_files = get_csv_paths(self.csv_directory)
 
     def turn_data_into_dict(self) -> list:
         """ convert csv data into a list of dictionaries """
@@ -51,9 +49,8 @@ class ProcessAndStoreData:
         """ store summary data in a JSON file """
 
         current_timestamp = datetime.now().timestamp()
-        # :TODO Better to use self.json_directory directly when necessary, but we can argue about that :D
-        json_directory_path = self.json_directory
-        filename = f"{json_directory_path}/summary_{current_timestamp}.json"
+
+        filename = f"{self.json_directory}/summary_{current_timestamp}.json"
 
         while True:
             try:
@@ -65,6 +62,6 @@ class ProcessAndStoreData:
 
             # create the directory where JSONs are kept if it doesn't exist
             except FileNotFoundError:
-                os.makedirs(json_directory_path, exist_ok=True)
+                os.makedirs(self.json_directory, exist_ok=True)
 
                 self.logger.error(f"created directory as: {self.json_directory}")

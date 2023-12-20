@@ -4,7 +4,9 @@ from datetime import datetime
 
 class JsonDataModifier:
     @staticmethod
-    def modify_json(json_file_path, data_file_path):
+    def modify_json(json_file_path: str, config_dict: dict):
+        data_file_path = config_dict['Paths']['data_file_path']
+
         """ modifies a json file, adding timestamp information and creating a new adjusted json file """
 
         # get the current date and time

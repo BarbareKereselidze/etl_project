@@ -2,23 +2,22 @@ import os
 import csv
 from datetime import datetime
 
-from config.config_reader import get_config_value
 from generate_fake_data.fake_data_generator import GenerateFakeData
 
-from logging.logger import get_logger
+from utils.logger import get_logger
 
 
 class GenerateCsv:
     """ class to generate csv files from fake user and fake job data """
 
-    def __init__(self, config_file_path: str) -> None:
+    def __init__(self, config_dict: dict) -> None:
         fake_data_generator = GenerateFakeData()
 
         self.fake_user_data = fake_data_generator.generate_fake_user()
         self.fake_job_data = fake_data_generator.generate_fake_job()
 
         # path of where to store the files
-        self.csv_path = get_config_value(config_file_path, "Paths", "csv_path")
+        self.csv_path = config_dict['Paths']['csv_path']
 
         # getting logger instance for logging
         self.logger = get_logger()
@@ -49,9 +48,7 @@ class GenerateCsv:
     def generate_csv(self) -> None:
         """ generate fake user and job data csv files """
 
-        # :TODO Needs to add/extend capability to receive list of arguments
-        # :TODO or at least have those two calls in for loop. By doing so, we
-        # :TODO follow DRY rule (Don't repeat yourself)
-        self.create_csv(self.fake_user_data)
-        self.create_csv(self.fake_job_data)
+        csv_list = [self.fake_user_data, self.fake_job_data]
+        for each in csv_list:
+            self.create_csv(each)
 
