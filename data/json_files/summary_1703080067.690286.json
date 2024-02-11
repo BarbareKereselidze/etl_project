@@ -1,0 +1,45 @@
+[
+    {
+        "fake_data_1703080067.689953.csv": [
+            {
+                "csv_file_size_in_mb": 0.01,
+                "df_of_csv_rows_n": 125,
+                "df_of_csv_columns_n": 6,
+                "df_size_in_mb": 0.036,
+                "df_of_column_size_in_mb": 0.008,
+                "hash": "ce8c9cbe153c74049ee0a2c8981947af2c06e370fe17253e05b1f745815c433d",
+                "df_of_all_column_size_in_mb": [
+                    {
+                        "name": 0.008,
+                        "job": 0.009,
+                        "company": 0.009,
+                        "salary": 0.001,
+                        "credit_card_number": 0.001,
+                        "credit_card_expire": 0.007
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "fake_data_1703080067.689378.csv": [
+            {
+                "csv_file_size_in_mb": 0.013,
+                "df_of_csv_rows_n": 125,
+                "df_of_csv_columns_n": 5,
+                "df_size_in_mb": 0.046,
+                "df_of_column_size_in_mb": 0.008,
+                "hash": "0775f888fda9d0f2b3f2c25798f1f73b5c5a0ed8e4ba00ac7bfc30dc5e9df490",
+                "df_of_all_column_size_in_mb": [
+                    {
+                        "name": 0.008,
+                        "birthdate": 0.008,
+                        "email": 0.009,
+                        "address": 0.012,
+                        "phone_number": 0.009
+                    }
+                ]
+            }
+        ]
+    }
+]

@@ -1,2 +1,3 @@
-# For Pycharm IDE cache files, but anyway, it should exist in the python project repo
 .idea/
+__pycache__/
+*.pyc
